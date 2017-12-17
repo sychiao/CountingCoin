@@ -57,7 +57,7 @@ void sobel_filtering_xy(unsigned char** image1, unsigned char** image2 ,int x_si
   int x, y, i, j;  /* Loop variable */
   
   /* Maximum values calculation after filtering*/
-  printf("Now, filtering of input image is performed\n\n");
+//  printf("Now, filtering of input image is performed\n\n");
   min = DBL_MAX;
   max = -DBL_MAX;
   for (y = 1; y < y_size1 - 1; y++) {
