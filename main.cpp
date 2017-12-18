@@ -89,7 +89,7 @@ int main()
     HoughCircles(test, circles, CV_HOUGH_GRADIENT, 2, 50, 100, 100);
 
     for (Vec3f vec : circles)
-            std::cout << vec.val[0] << std::endl;
+            std::cout << vec.val[0] <<", " << vec[1] << ", " << vec[2] << std::endl;
 
 
     std::cout<<"Hello:"<<circles.size();
