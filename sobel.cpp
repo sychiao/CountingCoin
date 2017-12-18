@@ -1,14 +1,6 @@
+
 #include "func.h"
-bitmap::bitmap(Mat mat)
-{
-	w = mat.cols;
-	h = mat.rows;
-	pixel = (uchar*)malloc(sizeof(uchar)*w*h);
-	if (mat.isContinuous())
-		pixel = mat.data;
-	else
-		printf("not continuous");
-}
+
 int* Convolution(uchar *f, int fw, int fh, int *g, int gw, int gh)
 {
 	int *p = (int*)malloc(sizeof(int)*fw*fh);
