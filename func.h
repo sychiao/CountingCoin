@@ -22,5 +22,6 @@ public:
 
 
 void Sobel(bitmap &img);
+uchar* Hough(bitmap &img, int r);
 
 #endif

@@ -8,5 +8,5 @@ add_executable( DisplayImage opencv_sample.cpp )
 target_link_libraries( DisplayImage ${OpenCV_LIBS} )
 
 
-add_executable( CountingCoin main.cpp sobel.cpp)
+add_executable( CountingCoin main.cpp sobel.cpp hough.cpp)
 target_link_libraries( CountingCoin ${OpenCV_LIBS} )
