@@ -1,6 +1,4 @@
-
 #include "func.h"
-#define N 512
 
 
 
@@ -117,7 +115,6 @@ void Sobel(bitmap &img)
 
 // Not support full cuda
 //*
-    
     cudaMalloc(&pixel, sizeof(int)*img.w*img.h);
     cudaMemcpy(pixel, img.pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyHostToDevice);
 //*/
@@ -126,21 +123,22 @@ void Sobel(bitmap &img)
     cudaMalloc(&gx, sizeof(int)*img.w*img.h);
     cudaMalloc(&gy, sizeof(int)*img.w*img.h);
 
-    Convolution<<<(img.w * img.h + N) / N, N>>>(pixel, bur, img.w, img.h, 2, 5, 5);
+    Convolution<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(pixel, bur, img.w, img.h, 2, 5, 5);
 
     // Kernel 1
-    copy_back<<<(img.w * img.h + N) / N, N>>>(pixel, bur, img.h, img.w);
+    copy_back<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(pixel, bur, img.h, img.w);
 
-	Convolution<<<(img.w * img.h + N) / N, N>>>(pixel, gx, img.w, img.h, 0, 3, 3);
-	Convolution<<<(img.w * img.h + N) / N, N>>>(pixel, gy, img.w, img.h, 1, 3, 3);
+	Convolution<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(pixel, gx, img.w, img.h, 0, 3, 3);
+	Convolution<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(pixel, gy, img.w, img.h, 1, 3, 3);
 
     // Kernel 2
-    compute<<<(img.w * img.h + N) / N, N>>>(pixel, gx, gy, img.w, img.h);
+    compute<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(pixel, gx, gy, img.w, img.h);
 
+//*
     cudaMemcpy(img.pixel, pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyDeviceToHost);
-
+    cudaFree(pixel);
+//*/
     cudaFree(bur);
     cudaFree(gx);
     cudaFree(gy);
-    cudaFree(pixel);
 }

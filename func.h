@@ -1,6 +1,24 @@
 #ifndef __FUNC_H
 #define __FUNC_H
 #include <opencv2/opencv.hpp>
+
+
+#define BLOCK_SIZE 512
+
+#define CHECK_ERROR( err ) \
+      if( err != cudaSuccess ) { \
+              std::cerr << "Line " << __LINE__ << " ERROR: " << cudaGetErrorString( err ) << std::endl; \
+              exit( -1 ); \
+            }
+
+#define CHECK_LAST_ERROR \
+      { cudaError_t err = cudaGetLastError(); \
+              if( err != cudaSuccess ) { \
+                        std::cerr <<  "Line " << __LINE__ << cudaGetErrorString( err ) << std::endl; \
+                        exit( -1 ); \
+                      } \
+            }  
+
 using namespace cv;
 class bitmap
 {
