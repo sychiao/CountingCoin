@@ -13,15 +13,22 @@ public:
         w = mat.cols;
         h = mat.rows;
         pixel = (uchar*)malloc(sizeof(uchar)*w*h);
-        if (mat.isContinuous())
-            pixel = mat.data;
-        else
+        if (mat.isContinuous()) {
+            memcpy( pixel, mat.data, (std::size_t) sizeof(uchar)*w*h );
+        } else {
             printf("not continuous");
+        }
+    }
+	bitmap(const bitmap& img)
+    {
+        w = img.w;
+        h = img.h;
+        pixel = (uchar*)malloc(sizeof(uchar)*w*h);
     }
 };
 
 
 void Sobel(bitmap &img);
-uchar* Hough(bitmap &img, int r);
+void Hough(bitmap &img, bitmap &oldimg, int r);
 
 #endif

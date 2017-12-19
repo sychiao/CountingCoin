@@ -18,23 +18,20 @@ int main()
 	bitmap img(srcImg);
 	
 	Sobel(img);
-	uchar *p = Hough(img,113);
-	
+
+	bitmap oldimg(img);
+    oldimg.pixel = (uchar*)malloc(sizeof(uchar)*img.w*img.h);
+
+	Hough(img, oldimg, 113);
+
 	Mat m = Mat(img.h, img.w, CV_8UC1);
-	memcpy(m.data, img.pixel, img.w*img.h*sizeof(uchar));
+	memcpy(m.data, oldimg.pixel, img.w*img.h*sizeof(uchar));
 	Mat m2 = Mat(img.h, img.w, CV_8UC1);
-	memcpy(m2.data, p, img.w*img.h * sizeof(uchar));
+	memcpy(m2.data, img.pixel, img.w*img.h * sizeof(uchar));
 	GaussianBlur(m2, m2, Size(9, 9), 0, 0);
-	threshold(m2, m2, 50, 255, THRESH_BINARY );
-	
-	Mat m3 = m2.clone();
-	bitmap cool(m3);
-	uchar *pp = Hough(cool,115);
+	threshold(m2, m2, 30, 255, THRESH_BINARY );
 
-	Mat m4 = Mat(img.h, img.w, CV_8UC1);
-	memcpy(m4.data, pp, img.w*img.h * sizeof(uchar));
 
-	//imshow("Hello",m4);
 	imshow("Hello22", m2);
 	waitKey(0);
 	return 0;
