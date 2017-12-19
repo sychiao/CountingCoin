@@ -1,6 +1,6 @@
 CC = nvcc
 CFLAGS = -g
-SRCS = main.cpp sobel.cu hough.cpp
+SRCS = main.cpp sobel.cu hough.cu
 PROG = CountingCoin_CU
 PROG_LLVM = CountingCoin_CU_LLVM
 # For GeForce GTX 660M
@@ -18,6 +18,8 @@ $(PROG):$(SRCS)
 
 LLVM: $(PROG_LLVM)
 
+
+# https://llvm.org/docs/CompileCudaWithLLVM.html#detecting-clang-vs-nvcc-from-code
 $(PROG_LLVM): $(SRCS)
 	clang++ -x cuda --cuda-gpu-arch=sm_30 -o $@ $^ $(LIBS) $(LLVM_FLAG) 
 
