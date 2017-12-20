@@ -1,8 +1,9 @@
 #include "func.h"
+#include "func.cuh"
 
 
 __global__
-void Zero(uchar* dst, int h, int w)
+void Zero(int* dst, int h, int w)
 {
     int index = blockIdx.x *blockDim.x + threadIdx.x;
 	if ( index >= h*w ) {
@@ -12,10 +13,10 @@ void Zero(uchar* dst, int h, int w)
 }
 
 __global__
-void Hough_compute(uchar* img, uchar* oldimg, int h, int w, int r)
+void Hough_compute(int* buffer, uchar* oldimg, int h, int w, int r)
 {
     int index = blockIdx.x *blockDim.x + threadIdx.x;
-    uchar* dst = img;
+    int* dst = buffer;
 	if ( index >= h*w ) {
         return;
     }
@@ -37,10 +38,12 @@ void Hough_compute(uchar* img, uchar* oldimg, int h, int w, int r)
             }
 		}
 	}
+
 }
 void Hough(bitmap &img, bitmap &oldimg, int r)
 {
     cudaError err;
+    int* buffer;
 //* Not support full cuda
     uchar* pixel;
     uchar* oldpixel;
@@ -52,17 +55,26 @@ void Hough(bitmap &img, bitmap &oldimg, int r)
 
     err= cudaMemcpy(pixel, img.pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyHostToDevice);
     CHECK_ERROR( err)
-    //cudaMemcpy(oldpixel, oldimg.pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyHostToDevice);
+    
+    memcpy( oldimg.pixel, img.pixel, (std::size_t) sizeof(uchar)*img.w * img.h );
+    err= cudaMemcpy(oldpixel, oldimg.pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyHostToDevice);
+    CHECK_ERROR( err)
 //*/
 
-    //memcpy( oldimg.pixel, img.pixel, (std::size_t) sizeof(uchar)*img.w * img.h );
-    err= cudaMemcpy(oldpixel, pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyDeviceToDevice);
+    err  = cudaMalloc(&buffer, sizeof(int)*img.w*img.h);
     CHECK_ERROR( err)
+    //memcpy( oldimg.pixel, img.pixel, (std::size_t) sizeof(uchar)*img.w * img.h );
+//    err= cudaMemcpy(oldpixel, pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyDeviceToDevice);
+//    CHECK_ERROR( err)
 
-    Zero<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(pixel, img.h, img.w);
+    Zero<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(buffer, img.h, img.w);
     CHECK_LAST_ERROR
-	Hough_compute<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(pixel, oldpixel, img.h, img.w, r);
+	Hough_compute<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(buffer, pixel, img.h, img.w, r);
     CHECK_LAST_ERROR
+
+    copy_back<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(pixel, buffer, img.h, img.w, 1);
+    CHECK_LAST_ERROR
+
 //*
 
     err= cudaMemcpy(img.pixel, pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyDeviceToHost);
