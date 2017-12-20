@@ -1,6 +1,6 @@
 CC = nvcc
 CFLAGS = -g
-SRCS = main.cpp sobel.cu hough.cu
+SRCS = main.cu sobel.cu hough.cu erode.cpp
 PROG = CountingCoin_CU
 PROG_LLVM = CountingCoin_CU_LLVM
 # For GeForce GTX 660M
@@ -24,4 +24,4 @@ $(PROG_LLVM): $(SRCS)
 	clang++ -x cuda --cuda-gpu-arch=sm_30 -o $@ $^ $(LIBS) $(LLVM_FLAG) 
 
 clean:
-	rm -f $(PROG)
+	rm -f $(PROG) $(PROG_LLVM)

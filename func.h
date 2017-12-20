@@ -46,7 +46,13 @@ public:
 };
 
 
+void Erode(bitmap &img);
+void Dilate(bitmap &img);
 void Sobel(bitmap &img);
 void Hough(bitmap &img, bitmap &oldimg, int r);
+
+
+
+
 
 #endif

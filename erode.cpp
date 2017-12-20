@@ -6,7 +6,7 @@ int getindex(int x, int y, int w, int h)
 	return x + y*w;
 }
 
-void Erode(bitmap &img)
+void Dilate(bitmap &img)
 {
 	uchar *ptr = (uchar*)malloc(sizeof(uchar)*img.w*img.h);
 	for (int i = 0; i < img.w; i++)
@@ -37,7 +37,7 @@ void Erode(bitmap &img)
 	memcpy(img.pixel, ptr, sizeof(uchar)*img.h*img.w);
 }
 
-void dila(bitmap &img)
+void Erode(bitmap &img)
 {
 	uchar *ptr = (uchar*)malloc(sizeof(uchar)*img.w*img.h);
 	for (int i = 0; i < img.w; i++)
