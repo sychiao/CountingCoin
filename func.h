@@ -48,5 +48,6 @@ public:
 
 void Sobel(bitmap &img);
 void Hough(bitmap &img, bitmap &oldimg, int r);
+void Otsu(bitmap &img);
 
 #endif
