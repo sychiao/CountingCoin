@@ -1,4 +1,5 @@
 #include "func.h"
+#include "func.cuh"
 
 
 
@@ -52,11 +53,11 @@ void Convolution(uchar *f, int *p, int fw, int fh, int a0b1bu2, int gw, int gh)
 }
 
 __global__
-void copy_back(uchar* dst, int* src, int h, int w)
+void copy_back(uchar* dst, int* src, int h, int w, int scaler)
 {
     int index = blockIdx.x *blockDim.x + threadIdx.x;
     if ( index < h*w ) {
-	    dst[index] = src[index] / 55;
+	    dst[index] = (uchar)( src[index] / scaler);
     }
 }
 
@@ -126,7 +127,7 @@ void Sobel(bitmap &img)
     Convolution<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(pixel, bur, img.w, img.h, 2, 5, 5);
 
     // Kernel 1
-    copy_back<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(pixel, bur, img.h, img.w);
+    copy_back<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(pixel, bur, img.h, img.w, 55);
 
 	Convolution<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(pixel, gx, img.w, img.h, 0, 3, 3);
 	Convolution<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(pixel, gy, img.w, img.h, 1, 3, 3);
