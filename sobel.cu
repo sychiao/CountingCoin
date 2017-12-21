@@ -113,12 +113,13 @@ void Sobel(bitmap &img)
 	int *gx;
 	int *gy;
     uchar* pixel;
+    pixel = img.pixel;
 
 // Not support full cuda
-//*
+/*
     cudaMalloc(&pixel, sizeof(int)*img.w*img.h);
     cudaMemcpy(pixel, img.pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyHostToDevice);
-//*/
+*/
 
     cudaMalloc(&bur, sizeof(int)*img.w*img.h);
     cudaMalloc(&gx, sizeof(int)*img.w*img.h);
@@ -135,10 +136,10 @@ void Sobel(bitmap &img)
     // Kernel 2
     compute<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(pixel, gx, gy, img.w, img.h);
 
-//*
+/*
     cudaMemcpy(img.pixel, pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyDeviceToHost);
     cudaFree(pixel);
-//*/
+*/
     cudaFree(bur);
     cudaFree(gx);
     cudaFree(gy);

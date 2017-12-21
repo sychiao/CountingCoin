@@ -43,10 +43,12 @@ void Hough_compute(int* buffer, uchar* oldimg, int h, int w, int r)
 void Hough(bitmap &img, bitmap &oldimg, int r)
 {
     cudaError err;
-    int* buffer;
-//* Not support full cuda
     uchar* pixel;
     uchar* oldpixel;
+    int* buffer;
+    pixel = img.pixel;
+    oldpixel = oldimg.pixel;
+/* Not support full cuda
 
     err = cudaMalloc(&pixel, sizeof(uchar)*img.w*img.h);
     CHECK_ERROR( err)
@@ -59,11 +61,11 @@ void Hough(bitmap &img, bitmap &oldimg, int r)
     memcpy( oldimg.pixel, img.pixel, (std::size_t) sizeof(uchar)*img.w * img.h );
     err= cudaMemcpy(oldpixel, oldimg.pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyHostToDevice);
     CHECK_ERROR( err)
-//*/
+*/
 
     err  = cudaMalloc(&buffer, sizeof(int)*img.w*img.h);
     CHECK_ERROR( err)
-    //memcpy( oldimg.pixel, img.pixel, (std::size_t) sizeof(uchar)*img.w * img.h );
+
 //    err= cudaMemcpy(oldpixel, pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyDeviceToDevice);
 //    CHECK_ERROR( err)
 
@@ -75,7 +77,7 @@ void Hough(bitmap &img, bitmap &oldimg, int r)
     copy_back<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(pixel, buffer, img.h, img.w, 1);
     CHECK_LAST_ERROR
 
-//*
+/*
 
     err= cudaMemcpy(img.pixel, pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyDeviceToHost);
     CHECK_ERROR( err)
@@ -86,5 +88,5 @@ void Hough(bitmap &img, bitmap &oldimg, int r)
     err= cudaFree(oldpixel);
     CHECK_ERROR( err)
 
-//*/
+*/
 }
