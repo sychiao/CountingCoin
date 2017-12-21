@@ -15,8 +15,13 @@ void Dilate_compute(uchar* dst, uchar* src, int h, int w)
     int i = index % w;
     int j = index / w;
 
+    if ( index >= h * w ) {
+        return;
+    }
+
 	if ( i <= 3 && i >= w-3 && j <= 3 && j >= h-3 )
 	{
+        dst[index] = src[index];
         return;
     }
 
@@ -45,15 +50,16 @@ void Dilate(bitmap &img)
     uchar* ptr;
 
     cudaMalloc(&ptr, sizeof(uchar)*img.w*img.h);
-    cudaMemcpy(ptr, pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyDeviceToDevice);
+//    cudaMemcpy(ptr, pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyDeviceToDevice);
 
 
 	//uchar *ptr = (uchar*)malloc(sizeof(uchar)*img.w*img.h);
 	//memcpy(ptr, img.pixel, sizeof(uchar)*img.h*img.w);
 
-    Dilate_compute<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(pixel, ptr, img.h, img.w);
+    Dilate_compute<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(ptr, pixel, img.h, img.w);
 
-
+    img.pixel = ptr;
+    ptr = pixel;
     cudaFree(ptr);
 }
 
@@ -65,8 +71,13 @@ void Erode_compute(uchar* dst, uchar* src, int h, int w)
     int i = index % w;
     int j = index / w;
 
+    if ( index >= h * w ) {
+        return;
+    }
+
 	if ( i <= 3 && i >= w-3 && j <= 3 && j >= h-3 )
 	{
+        dst[index] = src[index];
         return;
     }
 
@@ -98,9 +109,11 @@ void Erode(bitmap &img)
     uchar* ptr;
 
     cudaMalloc(&ptr, sizeof(uchar)*img.w*img.h);
-    cudaMemcpy(ptr, pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyDeviceToDevice);
+//    cudaMemcpy(ptr, pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyDeviceToDevice);
 
-    Erode_compute<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(pixel, ptr, img.h, img.w);
+    Erode_compute<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(ptr, pixel, img.h, img.w);
 
+    img.pixel = ptr;
+    ptr = pixel;
     cudaFree(ptr);
 }
