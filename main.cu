@@ -11,6 +11,10 @@ using namespace cv;
 
 int main()
 {
+    struct timeval tv0, tv;
+    gettimeofday(&tv0,NULL);
+        gettimeofday(&tv,NULL);
+        TimeDiff(tv0,tv);
 
 
 	Mat srcImg = imread("coincoin.png", CV_LOAD_IMAGE_GRAYSCALE);
@@ -48,7 +52,11 @@ int main()
     oldimg.pixel = d_oldimg_pixel;
     /****************************************/
 
+        gettimeofday(&tv,NULL);
+        TimeDiff(tv0,tv);
 	Erode(img);
+        gettimeofday(&tv,NULL);
+        TimeDiff(tv0,tv);
 	Dilate(img);
 
 
@@ -58,12 +66,18 @@ int main()
 //	imshow("Tmp", n);
     /***********************************/
 
+        gettimeofday(&tv,NULL);
+        TimeDiff(tv0,tv);
 	Sobel(img);
 
     oldimg.pixel = (uchar*)malloc(sizeof(uchar)*img.w*img.h);
 
    // for(int r=50;r<150;r+=2)
+        gettimeofday(&tv,NULL);
+        TimeDiff(tv0,tv);
     Hough(img, oldimg, 113);
+        gettimeofday(&tv,NULL);
+        TimeDiff(tv0,tv);
 
     /************ 8 Line *****************************/
     cudaMemcpy(tmp1, img.pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyDeviceToHost);
@@ -78,7 +92,7 @@ int main()
 	GaussianBlur(m2, m2, Size(9, 9), 0, 0);
 	threshold(m2, m2, 30, 255, THRESH_BINARY );
 
-	imshow("Final", m2);
-	waitKey(0);
+	//imshow("Final", m2);
+	//waitKey(0);
 	return 0;
 }

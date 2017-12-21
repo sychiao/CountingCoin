@@ -1,7 +1,9 @@
 #ifndef __FUNC_H
 #define __FUNC_H
-#include <opencv2/opencv.hpp>
 
+#include<sys/time.h>
+#include<stdio.h>
+#include <opencv2/opencv.hpp>
 
 #define BLOCK_SIZE 512
 
@@ -19,14 +21,13 @@
                       } \
             }  
 
-using namespace cv;
 class bitmap
 {
 public:
 	int w;
 	int h;
 	uchar *pixel;
-	bitmap(Mat mat)
+	bitmap(cv::Mat mat)
     {
         w = mat.cols;
         h = mat.rows;
@@ -51,8 +52,6 @@ void Dilate(bitmap &img);
 void Sobel(bitmap &img);
 void Hough(bitmap &img, bitmap &oldimg, int r);
 
-
-
-
+void TimeDiff(struct  timeval start, struct  timeval end);
 
 #endif
