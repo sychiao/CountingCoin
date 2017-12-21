@@ -39,10 +39,6 @@ int main()
     cudaMalloc(&d_img_pixel, sizeof(uchar) * img.w * img.h);
     cudaMalloc(&d_oldimg_pixel, sizeof(uchar) * img.w * img.h);
 
-
-	Erode(img);
-	Dilate(img);
-
     /************ 8 Line *****************************/
     cudaMemcpy(d_img_pixel, img.pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyHostToDevice);
     cudaMemcpy(d_oldimg_pixel, oldimg.pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyHostToDevice);
@@ -51,6 +47,16 @@ int main()
     img.pixel = d_img_pixel;
     oldimg.pixel = d_oldimg_pixel;
     /****************************************/
+
+	Erode(img);
+	Dilate(img);
+
+
+    /********* 5 Linw img show ***************/
+//    cudaMemcpy(tmp1, img.pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyDeviceToHost);
+//    n.data = tmp1;
+//	imshow("Tmp", n);
+    /***********************************/
 
 	Sobel(img);
 

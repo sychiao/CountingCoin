@@ -1,6 +1,6 @@
 CC = nvcc
 CFLAGS = -g
-SRCS = main.cu sobel.cu hough.cu erode.cpp
+SRCS = main.cu sobel.cu hough.cu erode.cu
 PROG = CountingCoin_CU
 PROG_LLVM = CountingCoin_CU_LLVM
 # For GeForce GTX 660M
