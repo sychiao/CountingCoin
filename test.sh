@@ -25,5 +25,4 @@ cat $total >> $out
 sleep 1
 done
 
-#rm -f $total $bd
-
+rm -f $total $bd
