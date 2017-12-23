@@ -6,28 +6,13 @@
 
 using namespace cv;
 
-// global tmp memory
-//__device__ int d_tmp[10];
 
 int main()
 {
     struct timeval tv0, tv;
     gettimeofday(&tv0,NULL);
-        gettimeofday(&tv,NULL);
-        TimeDiff(tv0,tv);
-
 
 	Mat srcImg = imread("coincoin.png", CV_LOAD_IMAGE_GRAYSCALE);
-
-
-// Prepare global tmp mem
-//    uchar** tmp;
-//    cudaError err;
-//    size_t s;
-//    err = cudaGetSymbolSize ( &s, "d_tmp"
-//            )   ;
-    //err = cudaGetSymbolAddress((void**)&tmp,"d_tmp");
-//    CHECK_ERROR(err);
 
 	threshold(srcImg, srcImg, 190, 255, THRESH_BINARY | THRESH_OTSU);
 	Mat mask1 = getStructuringElement(MORPH_RECT, Size(6, 6));
@@ -52,12 +37,11 @@ int main()
     oldimg.pixel = d_oldimg_pixel;
     /****************************************/
 
-        gettimeofday(&tv,NULL);
-        TimeDiff(tv0,tv);
+        TimeDiff(&tv0,&tv);
 	Erode(img);
-        gettimeofday(&tv,NULL);
-        TimeDiff(tv0,tv);
+        TimeDiff(&tv0,&tv);
 	Dilate(img);
+        TimeDiff(&tv0,&tv);
 
 
     /********* 5 Linw img show ***************/
@@ -66,18 +50,14 @@ int main()
 //	imshow("Tmp", n);
     /***********************************/
 
-        gettimeofday(&tv,NULL);
-        TimeDiff(tv0,tv);
 	Sobel(img);
+        TimeDiff(&tv0,&tv);
 
     oldimg.pixel = (uchar*)malloc(sizeof(uchar)*img.w*img.h);
 
    // for(int r=50;r<150;r+=2)
-        gettimeofday(&tv,NULL);
-        TimeDiff(tv0,tv);
     Hough(img, oldimg, 113);
-        gettimeofday(&tv,NULL);
-        TimeDiff(tv0,tv);
+        TimeDiff(&tv0,&tv);
 
     /************ 8 Line *****************************/
     cudaMemcpy(tmp1, img.pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyDeviceToHost);

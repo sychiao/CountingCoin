@@ -9,14 +9,14 @@
 
 #define CHECK_ERROR( err ) \
       if( err != cudaSuccess ) { \
-              std::cerr << "Line " << __LINE__ << " ERROR: " << cudaGetErrorString( err ) << std::endl; \
+              std::cerr << "File: " << __FILE__  << " Line " << __LINE__ << " ERROR: " << cudaGetErrorString( err ) << std::endl; \
               exit( -1 ); \
             }
 
 #define CHECK_LAST_ERROR \
       { cudaError_t err = cudaGetLastError(); \
               if( err != cudaSuccess ) { \
-                        std::cerr <<  "Line " << __LINE__ << cudaGetErrorString( err ) << std::endl; \
+                        std::cerr << "File: " << __FILE__ <<  " Line " << __LINE__ << cudaGetErrorString( err ) << std::endl; \
                         exit( -1 ); \
                       } \
             }  
@@ -53,6 +53,6 @@ void Sobel(bitmap &img);
 void Hough(bitmap &img, bitmap &oldimg, int r);
 void Otsu(bitmap &img);
 
-void TimeDiff(struct  timeval start, struct  timeval end);
+void TimeDiff(struct  timeval* start, struct  timeval* end);
 
 #endif

@@ -18,8 +18,6 @@ int main()
 {
     struct timeval tv0, tv;
     gettimeofday(&tv0,NULL);
-        gettimeofday(&tv,NULL);
-        TimeDiff(tv0,tv);
 
     char* I = "coincoin.png";
     Mat srcImg = imread(I,CV_LOAD_IMAGE_GRAYSCALE);
@@ -29,22 +27,17 @@ int main()
     //imshow("fuck",dst);
     Mat dst2;
     Mat mask1 = getStructuringElement(MORPH_RECT,Size(6,6));
-        gettimeofday(&tv,NULL);
-        TimeDiff(tv0,tv);
+        TimeDiff(&tv0,&tv);
     erode(dst,dst2,mask1);
-        gettimeofday(&tv,NULL);
-        TimeDiff(tv0,tv);
+        TimeDiff(&tv0,&tv);
     dilate(dst2,dst,mask1);
-        gettimeofday(&tv,NULL);
-        TimeDiff(tv0,tv);
+        TimeDiff(&tv0,&tv);
     Canny(dst,dst,3,9,3);
-        gettimeofday(&tv,NULL);
-        TimeDiff(tv0,tv);
+        TimeDiff(&tv0,&tv);
     std::vector<Vec3f> circles;
     HoughCircles(dst, circles, CV_HOUGH_GRADIENT, 2, 50, 100, 100);
-        gettimeofday(&tv,NULL);
-        TimeDiff(tv0,tv);
-    std::cout<<"Hello:"<<circles.size();
+        TimeDiff(&tv0,&tv);
+    //std::cout<<"Hello:"<<circles.size();
     drawCircle(result,circles);
     //namedWindow("hello world");
     //imshow("hello world",result);
