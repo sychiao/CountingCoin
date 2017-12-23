@@ -19,7 +19,7 @@ void Dilate_compute(uchar* dst, uchar* src, int h, int w)
         return;
     }
 
-	if ( i <= 3 && i >= w-3 && j <= 3 && j >= h-3 )
+	if ( i <= 3 || i >= w-3 || j <= 3 || j >= h-3 )
 	{
         dst[index] = src[index];
         return;
@@ -75,7 +75,7 @@ void Erode_compute(uchar* dst, uchar* src, int h, int w)
         return;
     }
 
-	if ( i <= 3 && i >= w-3 && j <= 3 && j >= h-3 )
+	if ( i <= 3 || i >= w-3 || j <= 3 || j >= h-3 )
 	{
         dst[index] = src[index];
         return;
