@@ -44,23 +44,15 @@ void Dilate_compute(uchar* dst, uchar* src, int h, int w)
         dst[index] = 0;
 }
 
-void Dilate(bitmap &img)
+void Dilate(bitmap &img, uchar* &d_buffer)
 {
     uchar* pixel = img.pixel;
-    uchar* ptr;
-
-    cudaMalloc(&ptr, sizeof(uchar)*img.w*img.h);
-//    cudaMemcpy(ptr, pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyDeviceToDevice);
-
-
-	//uchar *ptr = (uchar*)malloc(sizeof(uchar)*img.w*img.h);
-	//memcpy(ptr, img.pixel, sizeof(uchar)*img.h*img.w);
+    uchar* ptr = d_buffer;
 
     Dilate_compute<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(ptr, pixel, img.h, img.w);
 
     img.pixel = ptr;
-    ptr = pixel;
-    cudaFree(ptr);
+    d_buffer = pixel;
 }
 
 
@@ -103,17 +95,13 @@ void Erode_compute(uchar* dst, uchar* src, int h, int w)
 }
 
 
-void Erode(bitmap &img)
+void Erode(bitmap &img, uchar* &d_buffer)
 {
     uchar* pixel = img.pixel;
-    uchar* ptr;
-
-    cudaMalloc(&ptr, sizeof(uchar)*img.w*img.h);
-//    cudaMemcpy(ptr, pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyDeviceToDevice);
+    uchar* ptr = d_buffer;
 
     Erode_compute<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(ptr, pixel, img.h, img.w);
 
     img.pixel = ptr;
-    ptr = pixel;
-    cudaFree(ptr);
+    d_buffer = pixel;
 }

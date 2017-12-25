@@ -102,7 +102,7 @@ void compute(uchar* pixel, int* gx, int* gy, int w, int h)
         pixel[i + j*w] = 0;
 }
 
-void Sobel(bitmap &img)
+void Sobel(bitmap &img, uchar* &d_buffer)
 {
 /*
 	int *bur = (int*)malloc(sizeof(int)*img.w*img.h);
@@ -115,14 +115,11 @@ void Sobel(bitmap &img)
     uchar* pixel;
     pixel = img.pixel;
 
-// Not support full cuda
-/*
-    cudaMalloc(&pixel, sizeof(int)*img.w*img.h);
-    cudaMemcpy(pixel, img.pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyHostToDevice);
-*/
 
-    cudaMalloc(&bur, sizeof(int)*img.w*img.h);
-    cudaMalloc(&gx, sizeof(int)*img.w*img.h);
+//    cudaMalloc(&bur, sizeof(int)*img.w*img.h);
+    bur = (int*)d_buffer;
+    gx = bur;
+//    cudaMalloc(&gx, sizeof(int)*img.w*img.h);
     cudaMalloc(&gy, sizeof(int)*img.w*img.h);
 
     Convolution<<<(img.w * img.h + BLOCK_SIZE) / BLOCK_SIZE, BLOCK_SIZE>>>(pixel, bur, img.w, img.h, 2, 5, 5);
@@ -140,7 +137,7 @@ void Sobel(bitmap &img)
     cudaMemcpy(img.pixel, pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyDeviceToHost);
     cudaFree(pixel);
 */
-    cudaFree(bur);
-    cudaFree(gx);
+//    cudaFree(bur);
+//    cudaFree(gx);
     cudaFree(gy);
 }

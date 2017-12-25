@@ -24,8 +24,10 @@ int main()
     uchar* tmp2;
     uchar* d_img_pixel;
     uchar* d_oldimg_pixel;
-    cudaMalloc(&d_img_pixel, sizeof(uchar) * img.w * img.h);
+    uchar* d_buffer;
+    cudaMalloc(&d_img_pixel, sizeof(int) * img.w * img.h);
     cudaMalloc(&d_oldimg_pixel, sizeof(uchar) * img.w * img.h);
+    cudaMalloc(&d_buffer, sizeof(int) * img.w * img.h);
 
     /************ 8 Line *****************************/
     cudaMemcpy(d_img_pixel, img.pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyHostToDevice);
@@ -37,9 +39,9 @@ int main()
     /****************************************/
 
         TimeDiff(&tv0,&tv);
-	Erode(img);
+	Erode(img, d_buffer);
         TimeDiff(&tv0,&tv);
-	Dilate(img);
+	Dilate(img, d_buffer);
         TimeDiff(&tv0,&tv);
 
 
@@ -49,13 +51,13 @@ int main()
 //	imshow("Tmp", n);
     /***********************************/
 
-	Sobel(img);
+	Sobel(img,d_buffer);
         TimeDiff(&tv0,&tv);
 
     oldimg.pixel = (uchar*)malloc(sizeof(uchar)*img.w*img.h);
 
    // for(int r=50;r<150;r+=2)
-    Hough(img, oldimg, 113);
+    Hough(img, oldimg, 113, d_buffer);
         TimeDiff(&tv0,&tv);
 
     /************ 8 Line *****************************/
@@ -71,7 +73,12 @@ int main()
 	GaussianBlur(m2, m2, Size(9, 9), 0, 0);
 	threshold(m2, m2, 30, 255, THRESH_BINARY );
 
-	imshow("Final", m2);
-	waitKey(0);
+    cudaFree(d_img_pixel);
+    cudaFree(d_oldimg_pixel);
+    cudaFree(d_buffer);
+	//imshow("Final", m2);
+	//waitKey(0);
+
+        TimeDiff(&tv0,&tv);
 	return 0;
 }

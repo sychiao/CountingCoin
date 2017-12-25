@@ -47,10 +47,10 @@ public:
 };
 
 
-void Erode(bitmap &img);
-void Dilate(bitmap &img);
-void Sobel(bitmap &img);
-void Hough(bitmap &img, bitmap &oldimg, int r);
+void Erode(bitmap &img, uchar* &d_buffer);
+void Dilate(bitmap &img, uchar* &d_buffer);
+void Sobel(bitmap &img, uchar* &d_buffer);
+void Hough(bitmap &img, bitmap &oldimg, int r, uchar* &d_buffer);
 void Otsu(bitmap &img);
 
 void TimeDiff(struct  timeval* start, struct  timeval* end);

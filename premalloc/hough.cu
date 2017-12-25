@@ -40,14 +40,12 @@ void Hough_compute(int* buffer, uchar* oldimg, int h, int w, int r)
 	}
 
 }
-void Hough(bitmap &img, bitmap &oldimg, int r)
+void Hough(bitmap &img, bitmap &oldimg, int r, uchar* &d_buffer)
 {
     cudaError err;
     uchar* pixel;
-    uchar* oldpixel;
-    int* buffer;
+    int* buffer = (int*)d_buffer;
     pixel = img.pixel;
-    oldpixel = oldimg.pixel;
 /* Not support full cuda
 
     err = cudaMalloc(&pixel, sizeof(uchar)*img.w*img.h);
@@ -63,8 +61,6 @@ void Hough(bitmap &img, bitmap &oldimg, int r)
     CHECK_ERROR( err)
 */
 
-    err  = cudaMalloc(&buffer, sizeof(int)*img.w*img.h);
-    CHECK_ERROR( err)
 
 //    err= cudaMemcpy(oldpixel, pixel, sizeof(uchar)*img.w*img.h, cudaMemcpyDeviceToDevice);
 //    CHECK_ERROR( err)
