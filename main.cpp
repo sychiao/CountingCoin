@@ -29,17 +29,34 @@ int main()
         TimeDiff(&tv0,&tv);
 
 	bitmap oldimg(img);
-    oldimg.pixel = (uchar*)malloc(sizeof(uchar)*img.w*img.h);
+        oldimg.pixel = (uchar*)malloc(sizeof(uchar)*img.w*img.h);
+	
+        bitmap savimg(img);
 
-    Hough(img, oldimg, 113);
-        TimeDiff(&tv0,&tv);
+	for(int r=100;r<200;r+=2)
+	{	
+		Hough(img, oldimg, r);
+		for(int i=0;i<img.w;i++)
+		{
+			for(int j=0;j<img.h;j++)
+			{
+				int index = i+j*img.w;
+				if(img.pixel[index]>100)
+					savimg.pixel[index] = savimg.pixel[index]>img.pixel[index]?savimg.pixel[index]:img.pixel[index];
+			}
+		}
+		memcpy(img.pixel,oldimg.pixel,img.w*img.h*sizeof(uchar));
+	}
+
+	TimeDiff(&tv0,&tv);
 
 	Mat m2 = Mat(img.h, img.w, CV_8UC1);
-	memcpy(m2.data, img.pixel, img.w*img.h * sizeof(uchar));
+	memcpy(m2.data, savimg.pixel, img.w*img.h * sizeof(uchar));
 	GaussianBlur(m2, m2, Size(9, 9), 0, 0);
-	threshold(m2, m2, 30, 255, THRESH_BINARY );
+	//threshold(m2, m2, 30, 255, THRESH_BINARY );
 
-	//imshow("Final", m2);
-	//waitKey(0);
+	imshow("Final", m2);
+	waitKey(0);
+        TimeDiff(&tv0,&tv);
 	return 0;
 }
