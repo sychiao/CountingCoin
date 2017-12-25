@@ -38,9 +38,10 @@ int main()
     HoughCircles(dst, circles, CV_HOUGH_GRADIENT, 2, 50, 100, 100);
         TimeDiff(&tv0,&tv);
     //std::cout<<"Hello:"<<circles.size();
-    drawCircle(result,circles);
+//    drawCircle(result,circles);
     //namedWindow("hello world");
     //imshow("hello world",result);
 //    waitKey(0);
+        TimeDiff(&tv0,&tv);
     return 0;
 }

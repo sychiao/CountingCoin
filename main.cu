@@ -72,7 +72,11 @@ int main()
 	GaussianBlur(m2, m2, Size(9, 9), 0, 0);
 	threshold(m2, m2, 30, 255, THRESH_BINARY );
 
+    cudaFree(d_img_pixel);
+    cudaFree(d_oldimg_pixel);
+
 	//imshow("Final", m2);
 	//waitKey(0);
+        TimeDiff(&tv0,&tv);
 	return 0;
 }

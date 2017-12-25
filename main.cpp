@@ -41,5 +41,6 @@ int main()
 
 	//imshow("Final", m2);
 	//waitKey(0);
+        TimeDiff(&tv0,&tv);
 	return 0;
 }
