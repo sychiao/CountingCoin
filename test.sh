@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
-#exe=
+exe=orgin/CountingCoin_CU_LLVM
 total=.total
 bd=.breakdown
 out=out.csv
 count=5
 
+set -x
 
-
-echo "Overhead,Erode,Dilate,Canny,Hough,Total" > $out
+echo "Hello User please enter the title name of the data"
+read title
+echo $title >> $out
+echo "Overhead,Erode,Dilate,Canny,Hough,cleanup,Total" >> $out
 
 while [ $count -gt 0 ];
 do
@@ -25,4 +28,6 @@ cat $total >> $out
 sleep 1
 done
 
+echo "" >> $out
+echo "" >> $out
 rm -f $total $bd
